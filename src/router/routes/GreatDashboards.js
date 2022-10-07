@@ -1,7 +1,7 @@
 import { lazy } from 'react'
 
 const SalesOverview = lazy(() => import('../../views/dashboard/great/sales/overview'))
-const DashboardEcommerce = lazy(() => import('../../views/dashboard/great/sales/pipeline'))
+const PipelineOverview = lazy(() => import('../../views/dashboard/great/sales/pipeline'))
 
 const GreatDashboardRoutes = [
   {
@@ -10,7 +10,7 @@ const GreatDashboardRoutes = [
   },
   {
     path: '/dashboard/great/sales/pipeline',
-    element: <DashboardEcommerce />
+    element: <PipelineOverview />
   }
 ]
 
