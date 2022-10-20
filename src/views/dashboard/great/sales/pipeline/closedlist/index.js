@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 
 // ** Table Columns
 import { columns } from './columns'
+import { firstDayOfCurrentMonth, lastDayOfCurrentMonth, formatDate} from '@utils'
 
 // ** Third Party Components
 import Flatpickr from 'react-flatpickr'
@@ -16,7 +17,7 @@ import DataTable from 'react-data-table-component'
 import { Button, Input, Row, Col, Card, CardHeader, CardTitle } from 'reactstrap'
 
 // ** Store & Actions
-import { getData } from '../store'
+import { getData } from '../store/closed-list'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Styles
@@ -25,7 +26,7 @@ import '@styles/react/libs/tables/react-dataTable-component.scss'
 // ** Styles
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 
-const CustomHeader = ({ handleFilter, value, handleDateValue, dateValue, handleStageValue, stageValue, handlePerPage, rowsPerPage }) => {
+const CustomHeader = ({ dateValue, handlePerPage, rowsPerPage }) => {
   return (
     <div className='invoice-list-table-header w-100 py-2'>
       <Row>
@@ -50,55 +51,28 @@ const CustomHeader = ({ handleFilter, value, handleDateValue, dateValue, handleS
           className='actions-right d-flex align-items-center justify-content-lg-end flex-lg-nowrap flex-wrap mt-lg-0 mt-1 pe-lg-1 p-0'
         >
           <div className='d-flex align-items-center'>
-            <label htmlFor='search-invoice'>Search</label>
-            <Input
-              id='search-invoice'
-              className='ms-50 me-2 w-100'
-              type='text'
-              value={value}
-              onChange={e => handleFilter(e.target.value)}
-              placeholder='Search Deals'
-            />
+            <label htmlFor='search-invoice'>Date : { formatDate(dateValue[0]) } - { formatDate(dateValue[1]) }</label>
+            
           </div>
-          <div className='d-flex align-items-center'>
-            <label htmlFor='search-invoice'>Date</label>
-            <Flatpickr
-                className='form-control'
-                id='date'
-                value={dateValue}
-                options={{ mode: 'range', dateFormat: 'm/d/Y' }}
-                onChange={date => handleDateValue(date)}
-            />
-          </div>
-          <Input className='w-auto ' type='select' value={stageValue} onChange={handleStageValue}>
-            <option value=''>Select Stage</option>
-            <option value='Deal Identified'>Deal Identifed</option>
-            <option value='Initial Meeting'>Initial Meeting</option>
-            <option value='Qualifed To Buy'>Qualifed To Buy</option>
-            <option value='Decision Maker Meeting'>Decision Maker Meeting</option>
-            <option value='SOW Sent'>SOW Sent</option>
-            <option value='Closed Won'>Closed Won</option>
-            <option value='Closed Lost'>Closed Lost</option>
-          </Input>
         </Col>
       </Row>
     </div>
   )
 }
 
-const PipelineList = () => {
+const PipelineClosedList = () => {
   // ** Store vars
   const dispatch = useDispatch()
-  const store = useSelector(state => state.pipeline)
+  const store = useSelector(state => state.pipelineClosed)
 
   // ** States
   const [value, setValue] = useState('')
   const [sort, setSort] = useState('desc')
   const [sortColumn, setSortColumn] = useState('lastUpdate')
   const [currentPage, setCurrentPage] = useState(1)
-  const [stageValue, setStageValue] = useState('')
+  const [stageValue, setStageValue] = useState('Closed Won')
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [dateValue, setDateValue] = useState('')
+  const [dateValue, setDateValue] = useState([firstDayOfCurrentMonth(), lastDayOfCurrentMonth()])
 
   useEffect(() => {
     dispatch(
@@ -254,7 +228,7 @@ const PipelineList = () => {
     <div className='invoice-list-wrapper'>
       <Card>
         <CardHeader className='border-bottom text-center'>
-          <CardTitle className='text-primary text-center' tag='h4'>Pipeline</CardTitle>
+          <CardTitle className='text-primary text-center' tag='h4'>Closed This Month</CardTitle>
         </CardHeader>
         <div className='invoice-list-dataTable react-dataTable'>
           <DataTable
@@ -291,4 +265,4 @@ const PipelineList = () => {
   )
 }
 
-export default PipelineList
+export default PipelineClosedList

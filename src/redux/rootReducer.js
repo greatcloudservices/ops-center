@@ -13,6 +13,10 @@ import ecommerce from '@src/views/apps/ecommerce/store'
 import dataTables from '@src/views/tables/data-tables/store'
 import permissions from '@src/views/apps/roles-permissions/store'
 
+import pipeline from '@src/views/dashboard/great/sales/pipeline/store'
+import pipelineStages from '@src/views/dashboard/great/sales/pipeline/store/pipeline-stages'
+import pipelineClosed from '@src/views/dashboard/great/sales/pipeline/store/closed-list'
+
 const rootReducer = {
   auth,
   todo,
@@ -26,7 +30,10 @@ const rootReducer = {
   calendar,
   ecommerce,
   dataTables,
-  permissions
+  permissions,
+  pipeline,
+  pipelineStages,
+  pipelineClosed
 }
 
 export default rootReducer

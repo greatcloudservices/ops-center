@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react'
 import { columns } from './columns'
 
 // ** Third Party Components
-import Flatpickr from 'react-flatpickr'
 import ReactPaginate from 'react-paginate'
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
@@ -16,16 +15,14 @@ import DataTable from 'react-data-table-component'
 import { Button, Input, Row, Col, Card, CardHeader, CardTitle } from 'reactstrap'
 
 // ** Store & Actions
-import { getData } from '../store'
+import { getData } from '../store/pipeline-stages'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Styles
 import '@styles/react/apps/app-invoice.scss'
 import '@styles/react/libs/tables/react-dataTable-component.scss'
-// ** Styles
-import '@styles/react/libs/flatpickr/flatpickr.scss'
 
-const CustomHeader = ({ handleFilter, value, handleDateValue, dateValue, handleStageValue, stageValue, handlePerPage, rowsPerPage }) => {
+const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   return (
     <div className='invoice-list-table-header w-100 py-2'>
       <Row>
@@ -60,46 +57,24 @@ const CustomHeader = ({ handleFilter, value, handleDateValue, dateValue, handleS
               placeholder='Search Deals'
             />
           </div>
-          <div className='d-flex align-items-center'>
-            <label htmlFor='search-invoice'>Date</label>
-            <Flatpickr
-                className='form-control'
-                id='date'
-                value={dateValue}
-                options={{ mode: 'range', dateFormat: 'm/d/Y' }}
-                onChange={date => handleDateValue(date)}
-            />
-          </div>
-          <Input className='w-auto ' type='select' value={stageValue} onChange={handleStageValue}>
-            <option value=''>Select Stage</option>
-            <option value='Deal Identified'>Deal Identifed</option>
-            <option value='Initial Meeting'>Initial Meeting</option>
-            <option value='Qualifed To Buy'>Qualifed To Buy</option>
-            <option value='Decision Maker Meeting'>Decision Maker Meeting</option>
-            <option value='SOW Sent'>SOW Sent</option>
-            <option value='Closed Won'>Closed Won</option>
-            <option value='Closed Lost'>Closed Lost</option>
-          </Input>
         </Col>
       </Row>
     </div>
   )
 }
 
-const PipelineList = () => {
+const StageList = () => {
   // ** Store vars
   const dispatch = useDispatch()
-  const store = useSelector(state => state.pipeline)
+  const store = useSelector(state => state.pipelineStages)
 
   // ** States
   const [value, setValue] = useState('')
   const [sort, setSort] = useState('desc')
-  const [sortColumn, setSortColumn] = useState('lastUpdate')
+  const [sortColumn, setSortColumn] = useState('dealStage')
   const [currentPage, setCurrentPage] = useState(1)
-  const [stageValue, setStageValue] = useState('')
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [dateValue, setDateValue] = useState('')
-
+  
   useEffect(() => {
     dispatch(
       getData({
@@ -107,9 +82,7 @@ const PipelineList = () => {
         q: value,
         sortColumn,
         page: currentPage,
-        perPage: rowsPerPage,
-        stage: stageValue,
-        range: dateValue
+        perPage: rowsPerPage
       })
     )
   }, [dispatch, store.data.length])
@@ -122,9 +95,7 @@ const PipelineList = () => {
         q: val,
         sortColumn,
         page: currentPage,
-        perPage: rowsPerPage,
-        stage: stageValue,
-        range: dateValue
+        perPage: rowsPerPage
       })
     )
   }
@@ -136,42 +107,10 @@ const PipelineList = () => {
         q: value,
         sortColumn,
         page: currentPage,
-        stage: stageValue,
-        range: dateValue,
         perPage: parseInt(e.target.value)
       })
     )
     setRowsPerPage(parseInt(e.target.value))
-  }
-
-  const handleStageValue = e => {
-    setStageValue(e.target.value)
-    dispatch(
-      getData({
-        sort,
-        q: value,
-        sortColumn,
-        page: currentPage,
-        perPage: rowsPerPage,
-        stage: e.target.value,
-        range: dateValue
-      })
-    )
-  }
-
-  const handleDateValue = e => {
-    setDateValue(e)
-    dispatch(
-      getData({
-        sort,
-        q: value,
-        sortColumn,
-        page: currentPage,
-        perPage: rowsPerPage,
-        stage: stageValue,
-        range: e
-      })
-    )
   }
 
   const handlePagination = page => {
@@ -180,8 +119,6 @@ const PipelineList = () => {
         sort,
         q: value,
         sortColumn,
-        stage: stageValue,
-        range: dateValue,
         perPage: rowsPerPage,
         page: page.selected + 1
       })
@@ -216,15 +153,12 @@ const PipelineList = () => {
 
   const dataToRender = () => {
     const filters = {
-      q: value,
-      stage: stageValue,
-      range: dateValue
+      q: value
     }
 
     const isFiltered = Object.keys(filters).some(function (k) {
       return filters[k].length > 0
     })
-
     if (store.data.length > 0) {
       return store.data
     } else if (store.data.length === 0 && isFiltered) {
@@ -242,8 +176,6 @@ const PipelineList = () => {
         q: value,
         page: currentPage,
         sort: sortDirection,
-        stage: stageValue,
-        range: dateValue,
         perPage: rowsPerPage,
         sortColumn: column.sortField
       })
@@ -252,9 +184,9 @@ const PipelineList = () => {
 
   return (
     <div className='invoice-list-wrapper'>
-      <Card>
+       <Card>
         <CardHeader className='border-bottom text-center'>
-          <CardTitle className='text-primary text-center' tag='h4'>Pipeline</CardTitle>
+          <CardTitle className='text-primary text-center' tag='h4'>Pipeline Breakdown</CardTitle>
         </CardHeader>
         <div className='invoice-list-dataTable react-dataTable'>
           <DataTable
@@ -275,20 +207,16 @@ const PipelineList = () => {
             subHeaderComponent={
               <CustomHeader
                 value={value}
-                stageValue={stageValue}
-                dateValue={dateValue}
                 rowsPerPage={rowsPerPage}
                 handleFilter={handleFilter}
                 handlePerPage={handlePerPage}
-                handleStageValue={handleStageValue}
-                handleDateValue={handleDateValue}
               />
             }
           />
         </div>
-      </Card>
+        </Card>
     </div>
   )
 }
 
-export default PipelineList
+export default StageList

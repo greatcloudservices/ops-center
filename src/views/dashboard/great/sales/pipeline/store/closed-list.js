@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 // ** Axios Imports
 import axios from 'axios'
 
-export const getData = createAsyncThunk('salesPipeline/getData', async params => {
+export const getData = createAsyncThunk('salesClosed/getData', async params => {
   const response = await axios.get('/great/sales/pipeline', params)
 
   return {
@@ -15,8 +15,8 @@ export const getData = createAsyncThunk('salesPipeline/getData', async params =>
   }
 })
 
-export const salesPipelineSlice = createSlice({
-  name: 'salesPipeline',
+export const salesClosedSlice = createSlice({
+  name: 'salesClosede',
   initialState: {
     data: [],
     total: 1,
@@ -34,4 +34,4 @@ export const salesPipelineSlice = createSlice({
   }
 })
 
-export default salesPipelineSlice.reducer
+export default salesClosedSlice.reducer

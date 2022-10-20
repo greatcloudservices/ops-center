@@ -24,5 +24,6 @@ import './pages/account-settings'
 import './autoComplete/autoComplete'
 
 import './great/sales/bookings'
+import './great/sales/pipeline'
 
 mock.onAny().passThrough()

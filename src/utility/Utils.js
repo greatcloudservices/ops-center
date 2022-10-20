@@ -5,9 +5,9 @@ export const isObjEmpty = obj => Object.keys(obj).length === 0
 
 // ** Returns K format from a number
 export const kFormatter = num => (num > 999 ? `${(num / 1000).toFixed(1)}k` : num)
-export const asKDollar = num => `$ ${num / 1000}K`
-export const asMDollar = num => `$ ${num / 1000000}M`
-
+export const asKDollar = num => `$ ${(num / 1000).toFixed(1)}K`
+export const asMDollar = num => `$ ${(num / 1000000).toFixed(1)}M`
+export const asDollar = num => (num < 1000000 ? asKDollar(num) : asMDollar(num))
 
 // ** Converts HTML to string
 export const htmlToString = html => html.replace(/<\/?[^>]+(>|$)/g, '')
@@ -22,6 +22,20 @@ const isToday = date => {
     date.getFullYear() === today.getFullYear()
     /* eslint-enable */
   )
+}
+
+export const firstDayOfCurrentMonth = () => {
+  const date = new Date(), y = date.getFullYear(), m = date.getMonth()
+  return new Date(y, m, 1)
+}
+
+export const lastDayOfCurrentMonth = () => {
+  const date = new Date(), y = date.getFullYear(), m = date.getMonth()
+  return new Date(y, m + 1, 0)
+}
+
+export const numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
 /**
