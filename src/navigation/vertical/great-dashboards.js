@@ -1,5 +1,5 @@
 // ** Icons Import
-import { Home, PhoneCall, DollarSign, PieChart, Activity, Eye, GitMerge, Percent, BarChart } from 'react-feather'
+import { Home, PhoneCall, DollarSign, PieChart, Activity, Eye, GitMerge, Percent, BarChart, FastForward, Users } from 'react-feather'
 
 export default [
   {
@@ -31,7 +31,7 @@ export default [
     title: 'Customers',
     icon: <Home size={20} />,
     badge: 'light-warning',
-    badgeText: '2',
+    badgeText: '1',
     children: [
       {
         id: 'customersOverview',
@@ -43,22 +43,34 @@ export default [
   },
   {
     id: 'operationsDash',
-    title: 'Operations',
+    title: 'Delivery',
     icon: <Eye size={20} />,
     badge: 'light-warning',
-    badgeText: '2',
+    badgeText: '3',
     children: [
       {
         id: 'projectsOverview',
-        title: 'Projects Overview',
+        title: 'Projects',
         icon: <GitMerge size={12} />,
-        navLink: '/dashboard/great/operations/projects/overview'
+        navLink: '/dashboard/great/delivery/projects'
       },
       {
         id: 'utilization',
         title: 'Utilization',
         icon: <Percent size={12} />,
-        navLink: '/dashboard/great/operations/utilization/overview'
+        navLink: '/dashboard/great/delivery/utilization'
+      },
+      {
+        id: 'forecast',
+        title: 'Forecast',
+        icon: <FastForward size={12} />,
+        navLink: '/dashboard/great/delivery/forecast'
+      },
+      {
+        id: 'team',
+        title: 'Team',
+        icon: <Users size={12} />,
+        navLink: '/dashboard/great/delivery/team'
       }
     ]
   },
@@ -67,7 +79,7 @@ export default [
     title: 'Finance',
     icon: <DollarSign size={20} />,
     badge: 'light-warning',
-    badgeText: '2',
+    badgeText: '1',
     children: [
       {
         id: 'financeOverview',
