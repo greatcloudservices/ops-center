@@ -13,9 +13,10 @@ import ecommerce from '@src/views/apps/ecommerce/store'
 import dataTables from '@src/views/tables/data-tables/store'
 import permissions from '@src/views/apps/roles-permissions/store'
 
-import pipeline from '@src/views/dashboard/great/sales/pipeline/store'
-import pipelineStages from '@src/views/dashboard/great/sales/pipeline/store/pipeline-stages'
-import pipelineClosed from '@src/views/dashboard/great/sales/pipeline/store/closed-list'
+import pipeline from '@src/views/ui-elements/great/sales/pipeline/store'
+import pipelineStages from '@src/views/ui-elements/great/sales/pipeline/store/pipeline-stages'
+import pipelineClosed from '@src/views/ui-elements/great/sales/pipeline/store/closed-list'
+import pipelineCustomers from '@src/views/ui-elements/great/customers/store/pipeline-customers'
 
 const rootReducer = {
   auth,
@@ -33,7 +34,8 @@ const rootReducer = {
   permissions,
   pipeline,
   pipelineStages,
-  pipelineClosed
+  pipelineClosed,
+  pipelineCustomers
 }
 
 export default rootReducer

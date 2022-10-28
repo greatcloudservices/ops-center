@@ -15,11 +15,9 @@ import { ThemeColors } from '@src/utility/context/ThemeColors'
 import { Row, Col, Card, CardHeader, CardTitle, CardBody } from 'reactstrap'
 
 // ** Demo Components
-import StageList from '@src/views/ui-elements/great/sales/pipeline/stagelist'
-import PipelineList from '@src/views/ui-elements/great/sales/pipeline/list'
-import PipelineClosedList from '@src/views/ui-elements/great/sales/pipeline/closedlist'
-import StageAmountDonutChart from '@src/views/ui-elements/great/sales/pipeline/stagechart/StageAmountDonutChart'
-import StageCountDonutChart from '@src/views/ui-elements/great/sales/pipeline/stagechart/StageCountDonutChart'
+import CustomerList from '@src/views/ui-elements/great/customers/list'
+import CustomerAmountDonutChart from '@src/views/ui-elements/great/customers/charts/CustomerAmountDonutChart'
+import CustomerCountDonutChart from '@src/views/ui-elements/great/customers/charts/CustomerCountDonutChart'
 
 // ** Styles
 import '@styles/react/libs/charts/apex-charts.scss'
@@ -30,23 +28,15 @@ const PipelineOverview = () => {
     <div id='dashboard-analytics'>
      <Row className='match-height'>
         <Col lg='6' xs='12'>
-          <StageAmountDonutChart />
+         <CustomerAmountDonutChart /> 
         </Col>
         <Col lg='6' xs='12'>
-          <StageCountDonutChart />
-        </Col>
-      </Row>
-      <Row className='match-height'>
-        <Col lg='5' xs='12'>
-          <StageList />
-        </Col>
-        <Col lg='7' xs='12'>
-          <PipelineClosedList  />
+          <CustomerCountDonutChart />
         </Col>
       </Row>
       <Row className='match-height'>
         <Col xs='12'>
-          <PipelineList  />
+          <CustomerList  />
         </Col>
       </Row>
     </div>

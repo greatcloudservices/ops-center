@@ -168,6 +168,24 @@ const data = {
       lastUpdate: '10-12-2022'
     },
     {
+      id: 180,
+      companyName: 'Autodesk',
+      dealName: 'Autodesk | Brian, Prathija, Karun Renewal, 3...',
+      dealStage: 'Closed Won',
+      owner: 'David Holt',
+      amount: '414960.00',
+      lastUpdate: '10-12-2020'
+    },
+    {
+      id: 181,
+      companyName: 'Autodesk',
+      dealName: 'Autodesk | Brian, Prathija, Karun Renewal, 3...',
+      dealStage: 'Closed Won',
+      owner: 'David Holt',
+      amount: '500.00',
+      lastUpdate: '10-12-2021'
+    },
+    {
       id: 19,
       companyName: 'Company X',
       dealName: 'Some lame deal',
@@ -218,7 +236,6 @@ mock.onGet('/great/sales/pipeline').reply(config => {
       )
     }
   )
-console.log(range)
   // Filter for dates
   if (range.length === 2) {
     filteredData = filteredData.filter(pipeline => {
@@ -245,15 +262,6 @@ console.log(range)
       deals: filteredData.length <= perPage ? filteredData : paginateArray(filteredData, perPage, page)
     }
   ]
-})
-
-
-// ------------------------------------------------
-// GET: Return Clients
-// ------------------------------------------------
-mock.onGet('/api/invoice/clients').reply(() => {
-  const clients = data.invoices.map(invoice => invoice.client)
-  return [200, clients.slice(0, 5)]
 })
 
 mock.onGet('/great/sales/pipeline/stages').reply(config => {
@@ -368,6 +376,93 @@ mock.onGet('/great/sales/pipeline/stages').reply(config => {
     200,
     {
       allData: stages,
+      total: filteredData.length,
+      stages: filteredData.length <= perPage ? filteredData : paginateArray(filteredData, perPage, page)
+    }   
+  ]
+})
+
+mock.onGet('/great/sales/pipeline/customers').reply(config => {
+  // eslint-disable-next-line object-curly-newline
+  const { q = '', perPage = 10, page = 1, year = null, sort, sortColumn } = config
+  const customers = []
+  let searchYear = new Date().getFullYear()
+  //---------------------------------------------------
+  // Set all the Years array.  If the exact year is
+  // passed in (i.e. 2022) then use it.  If "All" is
+  // passed in, then get all years data.
+  //---------------------------------------------------
+  if (year !== null) {
+    searchYear = year
+  }
+  for (let i = 0; i < data.pipeline.length; i++) {
+
+    const deal = data.pipeline[i]
+    
+    //console.log(year === new Date(deal.lastUpdate).getFullYear())
+    //---------------------------------------------------
+    // When pulling from the sales pipeline for customers,
+    // we only care about deals that have been won.
+    //---------------------------------------------------
+    console.log(`Name: ${  deal.companyName}`, `Stage: ${  deal.dealStage}`, `Date: ${  deal.lastUpdate}`)
+    console.log(`Comparing to searchYear: ${searchYear}`)
+    console.log(`Same year? ${  searchYear === "All" ? true : parseInt(searchYear) === new Date(deal.lastUpdate).getFullYear()}`)
+    if (deal.dealStage === 'Closed Won' && (searchYear === "All" ? true : parseInt(searchYear) === new Date(deal.lastUpdate).getFullYear())) {
+      
+      //---------------------------------------------------
+      // Check our new Array to see if the customer
+      // is in it yet.
+      //---------------------------------------------------
+      const index = customers.findIndex(element => {
+        if (element.name === deal.companyName) {
+          return true
+        }
+        return false
+      })
+      //---------------------------------------------------
+      // If the customer is in the array, add to it.
+      // If not, put the new values in.
+      //---------------------------------------------------
+      if (index >= 0) {
+        customers[index].count = customers[index].count + 1
+        customers[index].amount = customers[index].amount + Number(deal.amount)
+      } else {
+        const customer = new Object()
+        customer.name = deal.companyName
+        customer.count = 1
+        customer.amount = Number(deal.amount)
+        customers.push(customer)
+      }
+    }
+  }
+ console.log(customers)
+  /* eslint-enable */
+  const dataAsc = customers.sort((a, b) => {
+  if (a[sortColumn]) {
+      return a[sortColumn] < b[sortColumn] ? -1 : 1
+    } else {
+      const splitColumn = sortColumn.split('.')
+      const columnA = a[splitColumn[0]][splitColumn[1]]
+      const columnB = b[splitColumn[0]][splitColumn[1]]
+      return columnA < columnB ? -1 : 1
+    }
+  })
+  const dataToFilter = sort === 'asc' ? dataAsc : dataAsc.reverse()
+  console.log("here2")
+  const queryLowered = q.toLowerCase()
+  const filteredData = dataToFilter.filter(pipeline => {
+
+      /* eslint-disable operator-linebreak, implicit-arrow-linebreak */
+      return (
+        (pipeline.name.toLowerCase().includes(queryLowered))
+      )
+    }
+  )
+  /* eslint-enable  */
+  return [
+    200,
+    {
+      allData: customers,
       total: filteredData.length,
       stages: filteredData.length <= perPage ? filteredData : paginateArray(filteredData, perPage, page)
     }   
