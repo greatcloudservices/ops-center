@@ -1,0 +1,42 @@
+// ** React Imports
+
+// ** Icons Imports
+import { List } from 'react-feather'
+
+// ** Custom Components
+import Avatar from '@components/avatar'
+import Timeline from '@components/timeline'
+import AvatarGroup from '@components/avatar-group'
+
+// ** Context
+import { ThemeColors } from '@src/utility/context/ThemeColors'
+
+// ** Reactstrap Imports
+import { Row, Col, Card, CardHeader, CardTitle, CardBody } from 'reactstrap'
+
+// ** Demo Components
+import CustomerList from '@src/views/ui-elements/great/customers/list'
+import StatsCard from '@src/views/ui-elements/great/delivery/projects/ProjectsStatsCard'
+
+// ** Styles
+import '@styles/react/libs/charts/apex-charts.scss'
+
+const ProjectsOverview = () => {
+  // ** Context
+  return (
+    <div id='dashboard-analytics'>
+     <Row className='match-height'>
+        <Col xl='12' md='12' xs='12'>
+          <StatsCard cols={{ xl: '3', sm: '6' }} />
+        </Col>
+      </Row>
+      <Row className='match-height'>
+        <Col xs='12'>
+          <CustomerList  />
+        </Col>
+      </Row>
+    </div>
+  )
+}
+
+export default ProjectsOverview

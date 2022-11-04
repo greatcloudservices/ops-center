@@ -1,0 +1,113 @@
+CREATE TABLE "delivery_users"(
+    "id" INTEGER NOT NULL,
+    "bt_id" INTEGER NOT NULL,
+    "firstname" TEXT NOT NULL,
+    "lastname" TEXT NOT NULL,
+    "team" TEXT NOT NULL,
+    "email" TEXT NOT NULL
+);
+ALTER TABLE
+    "delivery_users" ADD PRIMARY KEY("id");
+CREATE TABLE "delivery_time_entries"(
+    "id" INTEGER NOT NULL,
+    "bt_id" INTEGER NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "date" DATE NOT NULL,
+    "hours" INTEGER NOT NULL,
+    "bill_rate" DOUBLE PRECISION NOT NULL,
+    "cost_rate" DOUBLE PRECISION NOT NULL,
+    "billable" BOOLEAN NOT NULL,
+    "notes" TEXT NOT NULL,
+    "task_id" INTEGER NOT NULL
+);
+ALTER TABLE
+    "delivery_time_entries" ADD PRIMARY KEY("id");
+CREATE TABLE "delivery_cost"(
+    "id" INTEGER NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "start_date" DATE NOT NULL,
+    "end_date" DATE NOT NULL,
+    "salary" DOUBLE PRECISION NOT NULL,
+    "hourly" BOOLEAN NOT NULL
+);
+ALTER TABLE
+    "delivery_cost" ADD PRIMARY KEY("id");
+CREATE TABLE "delivery_projects"(
+    "id" INTEGER NOT NULL,
+    "bt_id" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "client_id" INTEGER NOT NULL,
+    "status" TEXT NOT NULL
+);
+ALTER TABLE
+    "delivery_projects" ADD PRIMARY KEY("id");
+CREATE TABLE "delivery_clients"(
+    "id" INTEGER NOT NULL,
+    "bt_id" INTEGER NOT NULL,
+    "name" TEXT NOT NULL
+);
+ALTER TABLE
+    "delivery_clients" ADD PRIMARY KEY("id");
+CREATE TABLE "delivery_tasks"(
+    "id" INTEGER NOT NULL,
+    "bt_id" INTEGER NOT NULL,
+    "name" INTEGER NOT NULL,
+    "status" INTEGER NOT NULL,
+    "project_id" INTEGER NOT NULL,
+    "start_date" DATE NOT NULL,
+    "end_date" DATE NOT NULL,
+    "hoursBudget" DOUBLE PRECISION NOT NULL,
+    "feeBudget" DOUBLE PRECISION NOT NULL,
+    "sales_lead_id" INTEGER NOT NULL,
+    "sales_engineer_id" INTEGER NULL,
+    "partnership" TEXT NOT NULL
+);
+ALTER TABLE
+    "delivery_tasks" ADD PRIMARY KEY("id");
+CREATE TABLE "sales_users"(
+    "id" INTEGER NOT NULL,
+    "hs_id" INTEGER NOT NULL,
+    "firstname" TEXT NOT NULL,
+    "lastname" TEXT NOT NULL,
+    "team" TEXT NOT NULL,
+    "email" TEXT NOT NULL
+);
+ALTER TABLE
+    "sales_users" ADD PRIMARY KEY("id");
+CREATE TABLE "sales_clients"(
+    "id" INTEGER NOT NULL,
+    "hs_id" INTEGER NOT NULL,
+    "name" TEXT NOT NULL
+);
+ALTER TABLE
+    "sales_clients" ADD PRIMARY KEY("id");
+CREATE TABLE "sales_deals"(
+    "id" INTEGER NOT NULL,
+    "hs_id" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "stage" TEXT NOT NULL,
+    "client_id" INTEGER NOT NULL,
+    "last_update" DATE NOT NULL,
+    "owner_id" INTEGER NOT NULL
+);
+ALTER TABLE
+    "sales_deals" ADD PRIMARY KEY("id");
+ALTER TABLE
+    "delivery_time_entries" ADD CONSTRAINT "delivery_time_entries_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "delivery_users"("id");
+ALTER TABLE
+    "delivery_cost" ADD CONSTRAINT "delivery_cost_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "delivery_users"("id");
+ALTER TABLE
+    "delivery_time_entries" ADD CONSTRAINT "delivery_time_entries_task_id_foreign" FOREIGN KEY("task_id") REFERENCES "delivery_tasks"("id");
+ALTER TABLE
+    "delivery_tasks" ADD CONSTRAINT "delivery_tasks_sales_lead_id_foreign" FOREIGN KEY("sales_lead_id") REFERENCES "delivery_users"("id");
+ALTER TABLE
+    "delivery_tasks" ADD CONSTRAINT "delivery_tasks_sales_engineer_id_foreign" FOREIGN KEY("sales_engineer_id") REFERENCES "delivery_users"("id");
+ALTER TABLE
+    "delivery_projects" ADD CONSTRAINT "delivery_projects_client_id_foreign" FOREIGN KEY("client_id") REFERENCES "delivery_clients"("id");
+ALTER TABLE
+    "delivery_tasks" ADD CONSTRAINT "delivery_tasks_project_id_foreign" FOREIGN KEY("project_id") REFERENCES "delivery_projects"("id");
+ALTER TABLE
+    "sales_deals" ADD CONSTRAINT "sales_deals_owner_id_foreign" FOREIGN KEY("owner_id") REFERENCES "sales_users"("id");
+ALTER TABLE
+    "sales_deals" ADD CONSTRAINT "sales_deals_client_id_foreign" FOREIGN KEY("client_id") REFERENCES "sales_clients"("id");
