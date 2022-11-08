@@ -404,9 +404,6 @@ mock.onGet('/great/sales/pipeline/customers').reply(config => {
     // When pulling from the sales pipeline for customers,
     // we only care about deals that have been won.
     //---------------------------------------------------
-    console.log(`Name: ${  deal.companyName}`, `Stage: ${  deal.dealStage}`, `Date: ${  deal.lastUpdate}`)
-    console.log(`Comparing to searchYear: ${searchYear}`)
-    console.log(`Same year? ${  searchYear === "All" ? true : parseInt(searchYear) === new Date(deal.lastUpdate).getFullYear()}`)
     if (deal.dealStage === 'Closed Won' && (searchYear === "All" ? true : parseInt(searchYear) === new Date(deal.lastUpdate).getFullYear())) {
       
       //---------------------------------------------------
@@ -435,7 +432,6 @@ mock.onGet('/great/sales/pipeline/customers').reply(config => {
       }
     }
   }
- console.log(customers)
   /* eslint-enable */
   const dataAsc = customers.sort((a, b) => {
   if (a[sortColumn]) {
@@ -448,7 +444,6 @@ mock.onGet('/great/sales/pipeline/customers').reply(config => {
     }
   })
   const dataToFilter = sort === 'asc' ? dataAsc : dataAsc.reverse()
-  console.log("here2")
   const queryLowered = q.toLowerCase()
   const filteredData = dataToFilter.filter(pipeline => {
 

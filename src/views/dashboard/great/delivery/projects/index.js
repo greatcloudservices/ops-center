@@ -15,7 +15,7 @@ import { ThemeColors } from '@src/utility/context/ThemeColors'
 import { Row, Col, Card, CardHeader, CardTitle, CardBody } from 'reactstrap'
 
 // ** Demo Components
-import CustomerList from '@src/views/ui-elements/great/customers/list'
+import ProjectList from '@src/views/ui-elements/great/delivery/projects/list'
 import StatsCard from '@src/views/ui-elements/great/delivery/projects/ProjectsStatsCard'
 
 // ** Styles
@@ -32,7 +32,7 @@ const ProjectsOverview = () => {
       </Row>
       <Row className='match-height'>
         <Col xs='12'>
-          <CustomerList  />
+          <ProjectList  />
         </Col>
       </Row>
     </div>

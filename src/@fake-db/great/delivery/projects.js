@@ -1,7 +1,6 @@
 import mock from '../../mock'
 
 // ** Utils
-import { paginateArray } from '../../utils'
 import { cloneDeep } from "lodash"
 
 const data = {
@@ -13,9 +12,11 @@ const data = {
       type: 'Staff Aug',
       projects: [
         {
+          id: 'P000046',
           name: 'Connectors',
           tasks: [
             {
+              id: 'T000046',
               name: 'SOW1',
               status: 'inactive',
               startDate: '08-29-2022',
@@ -101,6 +102,7 @@ const data = {
               ]
             },
             {
+              id: 'T000047',
               name: 'SOW2',
               status: 'active',
               startDate: '09-19-2022',
@@ -204,6 +206,7 @@ const data = {
               ]
             },
             {
+              id: 'T000048',
               name: 'SOW3',
               status: 'active',
               startDate: '10-09-2022',
@@ -299,9 +302,11 @@ const data = {
       type: 'Staff Aug',
       projects: [
         {
+          id: 'P000049',
           name: 'Bridgestone',
           tasks: [
             {
+              id: 'T000049',
               name: 'AEM Architect',
               status: 'active',
               startDate: '11-29-2021',
@@ -449,11 +454,13 @@ const data = {
 
 function getProjectsByStatus(clients, status) {
   const clientsWithActiveTasks = cloneDeep(clients)
-  for (let i = 0; i < clients.length; i++) {
-    const projects = clients[i].projects
-    for (let j = 0; j < projects.length; j++) {
-      const activeTasks = projects[j].tasks.filter(task => task.status === status)
-      clientsWithActiveTasks[i].projects[j].tasks = activeTasks
+  if (status) {
+    for (let i = 0; i < clients.length; i++) {
+      const projects = clients[i].projects
+      for (let j = 0; j < projects.length; j++) {
+        const activeTasks = projects[j].tasks.filter(task => task.status === status)
+        clientsWithActiveTasks[i].projects[j].tasks = activeTasks
+      }
     }
   }
   return clientsWithActiveTasks
@@ -461,17 +468,19 @@ function getProjectsByStatus(clients, status) {
 
 function getProjectsByYear(clients, year) {
   const clientsWithActiveTasks = cloneDeep(clients)
-  for (let i = 0; i < clients.length; i++) {
-    const projects = clients[i].projects
-    for (let j = 0; j < projects.length; j++) {
-      const tasks = projects[j].tasks
-      const ytdTasks = []
-      for (let k = 0; k < tasks.length; k++) {
-        if (tasks[k].timeEntries.filter(time => new Date(time.date).getFullYear() === year).length > 0) {
-          ytdTasks.push(tasks[k])
+  if (year) {
+    for (let i = 0; i < clients.length; i++) {
+      const projects = clients[i].projects
+      for (let j = 0; j < projects.length; j++) {
+        const tasks = projects[j].tasks
+        const ytdTasks = []
+        for (let k = 0; k < tasks.length; k++) {
+          if (tasks[k].timeEntries.filter(time => new Date(time.date).getFullYear() === year).length > 0) {
+            ytdTasks.push(tasks[k])
+          }
         }
+        clientsWithActiveTasks[i].projects[j].tasks = ytdTasks
       }
-      clientsWithActiveTasks[i].projects[j].tasks = ytdTasks
     }
   }
   return clientsWithActiveTasks
@@ -481,6 +490,25 @@ function calculateHoursPercentComplete(task) {
   const totalHours = task.timeEntries.map(item => item.hours).reduce((prev, curr) => prev + curr, 0)
   console.log(`totalHours: ${  totalHours  }; percent: ${  Math.ceil((totalHours / task.hoursBudget) * 100)}`)
   return Math.ceil((totalHours / task.hoursBudget) * 100)
+}
+
+function calculateTaskStats(task) {
+  const stats = {totalBillableHours: 0, totalNBHours: 0, totalBillableCost: 0, totalBillings: 0, totalNBCost: 0, totalCost: 0, totalHours: 0, grossProfit: 0, remainingHours: 0}
+  task.timeEntries.forEach(entry => {
+    if (entry.billable) {
+      stats.totalBillableHours = stats.totalBillableHours + entry.hours
+      stats.totalBillableCost = stats.totalBillableCost + (entry.hours * entry.cost)
+      stats.totalBillings = stats.totalBillings + (entry.hours * entry.rate)
+    } else {
+      stats.totalNBHours = stats.totalNBHours + entry.hours
+      stats.totalNBCost = stats.totalNBCost + (entry.hours * entry.cost)
+    }
+  })
+  stats.totalCost = stats.totalBillableCost + stats.totalNBCost
+  stats.totalHours = stats.totalBillableHours + stats.totalNBHours
+  stats.grossProfit = Math.ceil((stats.totalCost / stats.totalBillings) * 100)
+  stats.remainingHours = task.hoursBudget - stats.totalBillableHours
+  return stats
 }
 
 function getProjectsAbovePercentComplete(clients, percentComplete) {
@@ -521,7 +549,7 @@ mock.onGet('/great/delivery/projects/stats').reply(config => {
   // Loop through the clients/projects/tasks/hours and pull out the list that has
   // tasks that have hours billed to them in the current year.
   // -----------------------------------------------------------------------------
-  const ytdClients = getProjectsByYear(data.clients, 2022)
+  const ytdClients = getProjectsByYear(data.clients, new Date().getFullYear())
   count = 0
   ytdClients.forEach(client => {
     const projects = client.projects
@@ -567,122 +595,53 @@ mock.onGet('/great/delivery/projects/stats').reply(config => {
   ]
 })
 
+function ProjectRecord(companyId, companyName, projectId, projectName, taskId, taskName, contractHours, contractBudget, billableHours, remainingHours, billableCharge, grossProfit) {
+  this.companyId = companyId
+  this.company = companyName
+  this.projectId = projectId
+  this.project = projectName
+  this.taskId = taskId
+  this.task = taskName
+  this.contractHours = contractHours
+  this.contractBudget = contractBudget
+  this.billableHours = billableHours
+  this.remainingHours = remainingHours
+  this.billableCharge = billableCharge
+  this.grossProfit = grossProfit
+  this.percentComplete = Math.ceil((this.billableHours / this.contractHours) * 100)
+}
 
-mock.onGet('/great/sales/pipeline/stages').reply(config => {
+mock.onGet('/great/delivery/projects').reply(config => {
   // eslint-disable-next-line object-curly-newline
-  const { q = '', perPage = 10, page = 1, sort, sortColumn } = config
-  const stages = []
+  const { q = '', perPage = 10, page = 1, status = null, year = null, sort, sortColumn } = config
 
-  for (let i = 0; i < data.pipeline.length; i++) {
-    const deal = data.pipeline[i]
-    const index = stages.findIndex(element => {
-      if (element.dealStage === deal.dealStage) {
-         return true
-      }
-      return false
-    })
-    if (index >= 0) {
-      stages[index].count = stages[index].count + 1
-      stages[index].amount = stages[index].amount + Number(deal.amount)
-      stages[index].dealStage = deal.dealStage
-    } else {
-      const stage = new Object()
-      stage.dealStage = deal.dealStage
-      stage.count = 1
-      stage.amount = Number(deal.amount)
-      stages.push(stage)
-    }
-  }
- 
-  /* eslint-enable */
-  const dataAsc = stages.sort((a, b) => {
-  if (a[sortColumn]) {
-      return a[sortColumn] < b[sortColumn] ? -1 : 1
-    } else {
-      const splitColumn = sortColumn.split('.')
-      const columnA = a[splitColumn[0]][splitColumn[1]]
-      const columnB = b[splitColumn[0]][splitColumn[1]]
-      return columnA < columnB ? -1 : 1
-    }
-  })
-  const dataToFilter = sort === 'asc' ? dataAsc : dataAsc.reverse()
+  console.log(q, perPage, page, status, year, sort, sortColumn)
 
-  const queryLowered = q.toLowerCase()
-  const filteredData = dataToFilter.filter(pipeline => {
+  //const stats = { activeProjectsCount: 0, ytdProjectsCount: 0, lifetimeProjectsCount: 0, projectsOverCount: 0 }
 
-      /* eslint-disable operator-linebreak, implicit-arrow-linebreak */
-      return (
-        (pipeline.dealStage.toLowerCase().includes(queryLowered))
-      )
-    }
-  )
-  /* eslint-enable  */
-  return [
-    200,
-    {
-      allData: stages,
-      total: filteredData.length,
-      stages: filteredData.length <= perPage ? filteredData : paginateArray(filteredData, perPage, page)
-    }   
-  ]
-})
-
-mock.onGet('/great/sales/pipeline/customers').reply(config => {
-  // eslint-disable-next-line object-curly-newline
-  const { q = '', perPage = 10, page = 1, year = null, sort, sortColumn } = config
-  const customers = []
-  let searchYear = new Date().getFullYear()
-  //---------------------------------------------------
-  // Set all the Years array.  If the exact year is
-  // passed in (i.e. 2022) then use it.  If "All" is
-  // passed in, then get all years data.
-  //---------------------------------------------------
-  if (year !== null) {
-    searchYear = year
-  }
-  for (let i = 0; i < data.pipeline.length; i++) {
-
-    const deal = data.pipeline[i]
-    
-    //console.log(year === new Date(deal.lastUpdate).getFullYear())
-    //---------------------------------------------------
-    // When pulling from the sales pipeline for customers,
-    // we only care about deals that have been won.
-    //---------------------------------------------------
-    console.log(`Name: ${  deal.companyName}`, `Stage: ${  deal.dealStage}`, `Date: ${  deal.lastUpdate}`)
-    console.log(`Comparing to searchYear: ${searchYear}`)
-    console.log(`Same year? ${  searchYear === "All" ? true : parseInt(searchYear) === new Date(deal.lastUpdate).getFullYear()}`)
-    if (deal.dealStage === 'Closed Won' && (searchYear === "All" ? true : parseInt(searchYear) === new Date(deal.lastUpdate).getFullYear())) {
-      
-      //---------------------------------------------------
-      // Check our new Array to see if the customer
-      // is in it yet.
-      //---------------------------------------------------
-      const index = customers.findIndex(element => {
-        if (element.name === deal.companyName) {
-          return true
-        }
-        return false
+  // ---------------------------- Active Projects --------------------------------
+  // Filter results by status
+  // -----------------------------------------------------------------------------
+  const activeClients = getProjectsByStatus(data.clients, (status === "All") ? "" :  status)
+  
+  // --------------------------- YTD Projects ------------------------------------
+  // Filter results by year
+  // -----------------------------------------------------------------------------
+  const clients = getProjectsByYear(activeClients, (year === "All") ? "" :  parseInt(year))
+   
+  const projectRecords = []
+  clients.forEach(client => {
+    client.projects.forEach(project => {
+      project.tasks.forEach(task => {
+        const taskStats = calculateTaskStats(task)
+        const projectRecord = new ProjectRecord(client.id, client.companyName, project.id, project.name, task.id, task.name, task.hoursBudget, task.feeBudget, taskStats.totalBillableHours, taskStats.remainingHours, taskStats.totalBillings, taskStats.grossProfit)
+        projectRecords.push(projectRecord)
       })
-      //---------------------------------------------------
-      // If the customer is in the array, add to it.
-      // If not, put the new values in.
-      //---------------------------------------------------
-      if (index >= 0) {
-        customers[index].count = customers[index].count + 1
-        customers[index].amount = customers[index].amount + Number(deal.amount)
-      } else {
-        const customer = new Object()
-        customer.name = deal.companyName
-        customer.count = 1
-        customer.amount = Number(deal.amount)
-        customers.push(customer)
-      }
-    }
-  }
- console.log(customers)
+    })
+  })
+
   /* eslint-enable */
-  const dataAsc = customers.sort((a, b) => {
+  const dataAsc = projectRecords.sort((a, b) => {
   if (a[sortColumn]) {
       return a[sortColumn] < b[sortColumn] ? -1 : 1
     } else {
@@ -693,23 +652,24 @@ mock.onGet('/great/sales/pipeline/customers').reply(config => {
     }
   })
   const dataToFilter = sort === 'asc' ? dataAsc : dataAsc.reverse()
-  console.log("here2")
+ 
   const queryLowered = q.toLowerCase()
-  const filteredData = dataToFilter.filter(pipeline => {
+  const filteredData = dataToFilter.filter(projects => {
 
       /* eslint-disable operator-linebreak, implicit-arrow-linebreak */
       return (
-        (pipeline.name.toLowerCase().includes(queryLowered))
+        (projects.company.toLowerCase().includes(queryLowered))
       )
     }
   )
-  /* eslint-enable  */
+  
+   /* eslint-enable  */
   return [
-    200,
+    200,    
     {
-      allData: customers,
+      allData: clients,
       total: filteredData.length,
-      stages: filteredData.length <= perPage ? filteredData : paginateArray(filteredData, perPage, page)
+      projects: filteredData.length <= perPage ? filteredData : paginateArray(filteredData, perPage, page)
     }   
   ]
 })

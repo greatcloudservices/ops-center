@@ -5,18 +5,18 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 export const getData = createAsyncThunk('projects/getData', async params => {
-  const response = await axios.get('/great/delivery/projects/stats', params)
+  const response = await axios.get('/great/delivery/projects', params)
   
   return {
     params,
-    data: response.data.stages,
+    data: response.data.projects,
     allData: response.data.allData,
     totalPages: response.data.total
   }
 })
 
-export const projectStatsSlice = createSlice({
-  name: 'projectStats',
+export const projectsSlice = createSlice({
+  name: 'projects',
   initialState: {
     data: [],
     total: 1,
@@ -34,4 +34,4 @@ export const projectStatsSlice = createSlice({
   }
 })
 
-export default projectStatsSlice.reducer
+export default projectsSlice.reducer
