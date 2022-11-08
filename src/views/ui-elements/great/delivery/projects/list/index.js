@@ -112,7 +112,7 @@ const ProjectList = () => {
   const [sort, setSort] = useState('desc')
   const [sortColumn, setSortColumn] = useState('company')
   const [currentPage, setCurrentPage] = useState(1)
-  const [yearValue, setYearValue] = useState(new Date().getFullYear())
+  const [yearValue, setYearValue] = useState('')
   const [statusValue, setStatusValue] = useState('active')
   const [rowsPerPage, setRowsPerPage] = useState(10)
 

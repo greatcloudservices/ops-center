@@ -26,6 +26,7 @@ const data = {
               salesLead: 'Dave Holt',
               salesEngineer: '',
               partnership: 'AWS',
+              type: 'Staff Aug',
               timeEntries: [
                 {
                   name: 'Bart Spedden',
@@ -112,6 +113,7 @@ const data = {
               salesLead: 'Dave Holt',
               salesEngineer: '',
               partnership: 'AWS',
+              type: 'Staff Aug',
               timeEntries: [
                 {
                   name: 'Esteban Orue',
@@ -216,6 +218,7 @@ const data = {
               salesLead: 'Dave Holt',
               salesEngineer: '',
               partnership: 'AWS',
+              type: 'Staff Aug',
               timeEntries: [
                 {
                   name: 'Bart Spedden',
@@ -316,6 +319,7 @@ const data = {
               salesLead: 'Dave Holt',
               salesEngineer: '',
               partnership: 'Adobe',
+              type: 'Staff Aug',
               timeEntries: [
                 {
                   name: 'Sebastian Villamarin',
@@ -546,6 +550,16 @@ function getProjectsAbovePercentComplete(clients, percentComplete) {
   return clientsAbovePercent
 }
 
+function sumByKey(arr, key, value) {
+  const map = new Map()
+  for (const obj of arr) {
+    const currSum = map.get(obj[key]) || 0
+    map.set(obj[key], currSum + obj[value])
+  }
+  const res = Array.from(map, ([k, v]) => ({[key]: k, [value]: v}))
+  return res
+}
+
 mock.onGet('/great/delivery/projects/stats').reply(config => {
   // eslint-disable-next-line object-curly-newline
   const {} = config
@@ -620,13 +634,15 @@ mock.onGet('/great/delivery/projects/stats').reply(config => {
 // ---------------------------- Project Record --------------------------------------
 // Object that contains what is needed for the Project List table.
 // ----------------------------------------------------------------------------------
-function ProjectRecord(companyId, companyName, projectId, projectName, taskId, taskName, contractHours, contractBudget, billableHours, remainingHours, billableCharge, grossProfit) {
+function ProjectRecord(companyId, companyName, projectId, projectName, taskId, taskName, contractHours, contractBudget, billableHours, remainingHours, billableCharge, grossProfit, taskType, taskPartnership) {
   this.companyId = companyId
   this.company = companyName
   this.projectId = projectId
   this.project = projectName
   this.taskId = taskId
   this.task = taskName
+  this.taskType = taskType
+  this.taskPartnership = taskPartnership
   this.contractHours = contractHours
   this.contractBudget = contractBudget
   this.billableHours = billableHours
@@ -659,7 +675,7 @@ mock.onGet('/great/delivery/projects').reply(config => {
     client.projects.forEach(project => {
       project.tasks.forEach(task => {
         const taskStats = calculateTaskStats(task)
-        const projectRecord = new ProjectRecord(client.id, client.companyName, project.id, project.name, task.id, task.name, task.hoursBudget, task.feeBudget, taskStats.totalBillableHours, taskStats.remainingHours, taskStats.totalBillings, taskStats.grossProfit)
+        const projectRecord = new ProjectRecord(client.id, client.companyName, project.id, project.name, task.id, task.name, task.hoursBudget, task.feeBudget, taskStats.totalBillableHours, taskStats.remainingHours, taskStats.totalBillings, taskStats.grossProfit, task.type, task.partnership)
         projectRecords.push(projectRecord)
       })
     })
@@ -688,13 +704,18 @@ mock.onGet('/great/delivery/projects').reply(config => {
     }
   )
   
+  const groupedByTaskType = sumByKey(filteredData, 'taskType', 'billableCharge')
+  const groupedByPartnership = sumByKey(filteredData, 'taskPartnership', 'billableCharge')
+
    /* eslint-enable  */
   return [
     200,    
     {
       allData: clients,
       total: filteredData.length,
-      projects: filteredData.length <= perPage ? filteredData : paginateArray(filteredData, perPage, page)
+      projects: filteredData.length <= perPage ? filteredData : paginateArray(filteredData, perPage, page),
+      groupedByTaskType,
+      groupedByPartnership
     }   
   ]
 })

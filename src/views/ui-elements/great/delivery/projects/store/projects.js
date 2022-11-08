@@ -11,7 +11,9 @@ export const getData = createAsyncThunk('projects/getData', async params => {
     params,
     data: response.data.projects,
     allData: response.data.allData,
-    totalPages: response.data.total
+    totalPages: response.data.total,
+    groupedByTaskType: response.data.groupedByTaskType,
+    groupedByPartnership: response.data.groupedByPartnership
   }
 })
 
@@ -21,7 +23,9 @@ export const projectsSlice = createSlice({
     data: [],
     total: 1,
     params: {},
-    allData: []
+    allData: [],
+    groupedByTaskType: [],
+    groupedByPartnership: []
   },
   reducers: {},
   extraReducers: builder => {
@@ -30,6 +34,8 @@ export const projectsSlice = createSlice({
       state.allData = action.payload.allData
       state.total = action.payload.totalPages
       state.params = action.payload.params
+      state.groupedByTaskType = action.payload.groupedByTaskType
+      state.groupedByPartnership = action.payload.groupedByPartnership
     })
   }
 })
