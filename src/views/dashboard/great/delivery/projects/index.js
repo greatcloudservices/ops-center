@@ -31,12 +31,12 @@ const ProjectsOverview = () => {
         <Col xl='12' md='12' xs='12'>
           <StatsCard cols={{ xl: '3', sm: '6' }} />
         </Col>
-      </Row>
+     </Row>
      <Row className='match-height'>
-        <Col lg='6' xs='12'>
+        <Col lg='4' xs='12'>
           <ProjectTypeAmountDonutChart />
         </Col>
-        <Col lg='6' xs='12'>
+        <Col lg='4' xs='12'>
           <PartnershipAmountDonutChart />
         </Col>
       </Row>

@@ -123,7 +123,7 @@ const ApexRadiarChart = () => {
           <CardTitle className='text-primary text-center' tag='h4'>Project Type</CardTitle>
         </CardHeader>
       <CardBody>
-        <Chart options={amountOptions} series={amountSeries} type='donut' height={250} />
+        <Chart options={amountOptions} series={amountSeries} type='donut' height={200} />
       </CardBody>
     </Card>
   )
