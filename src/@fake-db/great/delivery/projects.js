@@ -452,6 +452,11 @@ const data = {
   ]
 }
 
+// ----------------------- getProjectsByStatus ---------------------------------------
+// Take an array of clients/projects/tasks and return those that match a specific
+// status.  Task are either "active" or "inactive".  If status is null or empty, 
+// all projects are returned.
+// ------------------------------------------------------------------------------------ 
 function getProjectsByStatus(clients, status) {
   const clientsWithActiveTasks = cloneDeep(clients)
   if (status) {
@@ -466,6 +471,11 @@ function getProjectsByStatus(clients, status) {
   return clientsWithActiveTasks
 }
 
+// ----------------------- getProjectsByYear ---------------------------------------
+// Take an array of clients/projects/tasks and return those that match a specific
+// year.  Somethings is consider to be in the year if it has time entries entered
+// for that year.  If year is null or empty, all projects are returned.
+// ------------------------------------------------------------------------------------ 
 function getProjectsByYear(clients, year) {
   const clientsWithActiveTasks = cloneDeep(clients)
   if (year) {
@@ -486,12 +496,19 @@ function getProjectsByYear(clients, year) {
   return clientsWithActiveTasks
 }
 
+// ----------------------- calculateHoursPercentComplete ---------------------------------------
+// Take a task and add up all the hours that were billed, compare it to the tasks
+// budgeted hours and return the percentage complete.
+// ------------------------------------------------------------------------------------ 
 function calculateHoursPercentComplete(task) {
   const totalHours = task.timeEntries.map(item => item.hours).reduce((prev, curr) => prev + curr, 0)
   console.log(`totalHours: ${  totalHours  }; percent: ${  Math.ceil((totalHours / task.hoursBudget) * 100)}`)
   return Math.ceil((totalHours / task.hoursBudget) * 100)
 }
 
+// ----------------------- calculateTaskStats -----------------------------------------
+// Take a task and calculate all the relevant statistics for that task.
+// ------------------------------------------------------------------------------------ 
 function calculateTaskStats(task) {
   const stats = {totalBillableHours: 0, totalNBHours: 0, totalBillableCost: 0, totalBillings: 0, totalNBCost: 0, totalCost: 0, totalHours: 0, grossProfit: 0, remainingHours: 0}
   task.timeEntries.forEach(entry => {
@@ -511,6 +528,11 @@ function calculateTaskStats(task) {
   return stats
 }
 
+// ----------------------- getProjectsAbovePercentComplete ----------------------------
+// Get a list of projects that are above a specified percentage complete.  This
+// is generally used to flag projects above a threshhold so that the sales team can
+// persue additional funds.
+// ------------------------------------------------------------------------------------
 function getProjectsAbovePercentComplete(clients, percentComplete) {
   const clientsAbovePercent = cloneDeep(clients)
   for (let i = 0; i < clients.length; i++) {
@@ -595,6 +617,9 @@ mock.onGet('/great/delivery/projects/stats').reply(config => {
   ]
 })
 
+// ---------------------------- Project Record --------------------------------------
+// Object that contains what is needed for the Project List table.
+// ----------------------------------------------------------------------------------
 function ProjectRecord(companyId, companyName, projectId, projectName, taskId, taskName, contractHours, contractBudget, billableHours, remainingHours, billableCharge, grossProfit) {
   this.companyId = companyId
   this.company = companyName
