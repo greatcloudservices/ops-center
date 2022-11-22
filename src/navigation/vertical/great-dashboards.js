@@ -65,15 +65,15 @@ export default [
         title: 'Forecast',
         icon: <FastForward size={12} />,
         navLink: '/dashboard/great/delivery/forecast'
-      },
+      }/*,
       {
         id: 'team',
         title: 'Team',
         icon: <Users size={12} />,
         navLink: '/dashboard/great/delivery/team'
-      }
+      }*/
     ]
-  },
+  }/*,
   {
     id: 'financeDash',
     title: 'Finance',
@@ -88,6 +88,6 @@ export default [
         navLink: '/dashboard/great/finance/overview'
       }
     ]
-  }
+  }*/
 
 ]
