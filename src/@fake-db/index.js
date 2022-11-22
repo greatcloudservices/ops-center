@@ -26,5 +26,6 @@ import './autoComplete/autoComplete'
 import './great/sales/bookings'
 import './great/sales/pipeline'
 import './great/delivery/projects'
+import './great/delivery/utilization'
 
 mock.onAny().passThrough()

@@ -18,6 +18,7 @@ import pipelineStages from '@src/views/ui-elements/great/sales/pipeline/store/pi
 import pipelineClosed from '@src/views/ui-elements/great/sales/pipeline/store/closed-list'
 import pipelineCustomers from '@src/views/ui-elements/great/customers/store/pipeline-customers'
 import projects from '@src/views/ui-elements/great/delivery/projects/store/projects'
+import utilization from '@src/views/ui-elements/great/delivery/utilization/store/utilization'
 
 const rootReducer = {
   auth,
@@ -37,7 +38,8 @@ const rootReducer = {
   pipelineStages,
   pipelineClosed,
   pipelineCustomers,
-  projects
+  projects,
+  utilization
 }
 
 export default rootReducer
