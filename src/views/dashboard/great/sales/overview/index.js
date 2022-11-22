@@ -26,7 +26,7 @@ const SalesOverview = () => {
     <div id='dashboard-ecommerce'>
       <Row className='match-height'>
         <Col lg='4' md='6' xs='12'>
-          <BookingGoalOverview success={colors.dark.main} cardTitle='Bookings Goal' />
+          <BookingGoalOverview success={colors.info.main} cardTitle='Bookings Goal' />
         </Col>
         <Col xl='8' md='6' xs='12'>
           <StatsCard cols={{ xl: '3', sm: '6' }} />
@@ -34,15 +34,15 @@ const SalesOverview = () => {
       </Row>
      <Row className='match-height'>
         <Col lg='12' md='12'>
-          <BookingMonthlyChart currentYear={colors.primary.main} previousYear={colors.dark.main} thirdYear={colors.secondary.main}/>
+          <BookingMonthlyChart currentYear={colors.primary.main} previousYear={colors.info.main} thirdYear={colors.secondary.main}/>
         </Col>
       </Row>
      <Row className='match-height'>
         <Col lg='8' md='12'>
-          <BookingQuarterlyChart currentYear={colors.primary.main} previousYear={colors.dark.main} thirdYear={colors.secondary.main}/>
+          <BookingQuarterlyChart currentYear={colors.primary.main} previousYear={colors.info.main} thirdYear={colors.secondary.main}/>
         </Col>
         <Col lg='4' md='12'>
-          <BookingYearlyChart currentYear={colors.primary.main} previousYear={colors.dark.main} thirdYear={colors.secondary.main}/>
+          <BookingYearlyChart currentYear={colors.primary.main} previousYear={colors.info.main} thirdYear={colors.secondary.main}/>
         </Col>
       </Row>
     </div>
