@@ -156,7 +156,7 @@ const CustomerList = () => {
   }
 
   const CustomPagination = () => {
-    const count = Number((store.total / rowsPerPage).toFixed(0))
+    const count = Math.ceil(Number((store.total / rowsPerPage)))
 
     return (
       <ReactPaginate
