@@ -9,11 +9,26 @@
       "UnauthRoleName": "amplify-opscenter-dev-01318-unauthRole",
       "StackName": "amplify-opscenter-dev-01318",
       "StackId": "arn:aws:cloudformation:us-west-2:752386982615:stack/amplify-opscenter-dev-01318/c97128b0-5750-11ed-b4ec-0a166888e127",
-      "AmplifyAppId": "d1c0y1h55nbfc1"
+      "AmplifyAppId": "d1c0y1h55nbfc1",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-opscenter-dev-01318-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "function": {
-        "SalesPipeline": {}
+        "SalesPipeline": {
+          "deploymentBucketName": "amplify-opscenter-dev-01318-deployment",
+          "s3Key": "amplify-builds/SalesPipeline-65544b73726c3173544d-build.zip"
+        },
+        "opscenterdd685506PostConfirmation": {
+          "GROUP": "Everyone",
+          "deploymentBucketName": "amplify-opscenter-dev-01318-deployment",
+          "s3Key": "amplify-builds/opscenterdd685506PostConfirmation-46474350614d41564c62-build.zip"
+        }
+      },
+      "auth": {
+        "opscenterdd685506": {
+          "googleClientId": "935975495898-kvgopf30hrvfdbb82hof84rno164orp9.apps.googleusercontent.com"
+        },
+        "userPoolGroups": {}
       }
     }
   }
