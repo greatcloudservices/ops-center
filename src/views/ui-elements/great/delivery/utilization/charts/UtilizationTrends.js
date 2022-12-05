@@ -68,7 +68,7 @@ const UtilizationTrends = () => {
         </Col>
       </Row>
       <Row className='match-height'>
-        <Col sm='12'>
+        <Col sm='6'>
           <UtilizationTrend
             labelColor={labelColor}
             gridLineColor={gridLineColor}
@@ -82,9 +82,7 @@ const UtilizationTrends = () => {
             secondaryLabel={getLabel(store.statistics.secondaryYear)}
           />
         </Col>
-      </Row>
-      <Row className='match-height'>
-        <Col sm='12'>
+        <Col sm='6'>
           <UtilizationTrend
             labelColor={labelColor}
             gridLineColor={gridLineColor}
@@ -98,6 +96,8 @@ const UtilizationTrends = () => {
             secondaryLabel={getLabel(store.statistics.secondaryYear)}
           />
         </Col>
+      </Row>
+      <Row className='match-height'>
       </Row>
       <Row className='match-height'>
         <Col sm='12'>
