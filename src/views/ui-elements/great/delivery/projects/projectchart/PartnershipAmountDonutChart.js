@@ -1,6 +1,7 @@
 // ** Third Party Components
 import Chart from 'react-apexcharts'
-import { useEffect } from 'react'
+import { useEffect, useContext } from 'react'
+import { ThemeColors } from '@src/utility/context/ThemeColors'
 
 import { getData } from '../store/projects'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,6 +14,7 @@ const ApexRadiarChart = () => {
   // ** Store vars
   const dispatch = useDispatch()
   const store = useSelector(state => state.projects)
+  const { colors } = useContext(ThemeColors)
  
   useEffect(() => {
     dispatch(
@@ -30,7 +32,26 @@ const ApexRadiarChart = () => {
     },
     labels: store.groupedByPartnership.map(a => a.taskPartnership),
 
-    //colors: [donutColors.series1, donutColors.series5, donutColors.series3, donutColors.series2],
+    theme: {
+      monochrome: {
+        enabled: true,
+        color: colors.secondary.main,
+        shadeTo: 'light',
+        shadeIntensity: 0.75
+      }
+    },
+    noData: {
+      text: 'I need data Bro',
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: undefined,
+        fontSize: '14px',
+        fontFamily: undefined
+      }
+    },
     dataLabels: {
       enabled: true,
       formatter(val) {

@@ -1,6 +1,7 @@
 // ** Third Party Components
 import Chart from 'react-apexcharts'
-import { useEffect } from 'react'
+import { useEffect, useContext } from 'react'
+import { ThemeColors } from '@src/utility/context/ThemeColors'
 
 import { getData } from '../store/pipeline-stages'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,6 +14,7 @@ const ApexRadiarChart = () => {
   // ** Store vars
   const dispatch = useDispatch()
   const store = useSelector(state => state.pipelineStages)
+  const { colors } = useContext(ThemeColors)
 
   // ** States
   //const [labels, setLabels] = useState('')
@@ -32,7 +34,14 @@ const ApexRadiarChart = () => {
     },
     labels: store.data.map(a => a.dealStage),
 
-    //colors: [donutColors.series1, donutColors.series5, donutColors.series3, donutColors.series2],
+    theme: {
+      monochrome: {
+        enabled: true,
+        color: colors.secondary.main,
+        shadeTo: 'light',
+        shadeIntensity: 0.75
+      }
+    },
     dataLabels: {
       enabled: true,
       formatter(val) {

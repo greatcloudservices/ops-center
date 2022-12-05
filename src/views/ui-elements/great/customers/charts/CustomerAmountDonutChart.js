@@ -1,6 +1,7 @@
 // ** Third Party Components
 import Chart from 'react-apexcharts'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { ThemeColors } from '@src/utility/context/ThemeColors'
 
 import { getData } from '../store/pipeline-customers'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,6 +15,7 @@ const ApexRadiarChart = () => {
   const dispatch = useDispatch()
   const store = useSelector(state => state.pipelineCustomers)
   const [sortColumn] = useState('name')
+  const { colors } = useContext(ThemeColors)
 
   useEffect(() => {
     dispatch(
@@ -32,7 +34,20 @@ const ApexRadiarChart = () => {
     },
     labels: store.data.map(a => a.name),
 
-    //colors: [donutColors.series1, donutColors.series5, donutColors.series3, donutColors.series2],
+    theme: {
+      monochrome: {
+        enabled: true,
+        color: colors.primary.main,
+        shadeTo: 'light',
+        shadeIntensity: 0.75
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      formatter(val) {
+        return `${parseInt(val)}%`
+      }
+    },
     dataLabels: {
       enabled: true,
       formatter(val) {
