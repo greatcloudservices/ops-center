@@ -61,7 +61,7 @@ const ApexRadiarChart = () => {
               fontSize: '1rem',
               fontFamily: 'Montserrat',
               formatter(val) {
-                return `$${numberWithCommas(val)}`
+                return `${numberWithCommas(val)}`
               }
             },
             total: {
