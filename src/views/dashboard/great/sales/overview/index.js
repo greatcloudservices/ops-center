@@ -7,7 +7,7 @@ import { Row, Col } from 'reactstrap'
 // ** Context
 import { ThemeColors } from '@src/utility/context/ThemeColors'
 
-import StatsCard from '@src/views/ui-elements/great/sales/booking/BookingStatsCard'
+import StatsCard from '@src/views/ui-elements/great/sales/booking/BookingStatCards'
 import BookingGoalOverview from '@src/views/ui-elements/great/sales/booking/BookingGoalOverview'
 import BookingMonthlyChart from '@src/views/ui-elements/great/sales/booking/BookingMonthlyChart'
 import BookingQuarterlyChart from '@src/views/ui-elements/great/sales/booking/BookingQuarterlyChart'
