@@ -1,9 +1,11 @@
 // ** React Imports
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 
 // ** Table Columns
 import { columns } from './columns'
+// ** Context
+import { ThemeColors } from '@src/utility/context/ThemeColors'
 
 // ** Third Party Components
 import Flatpickr from 'react-flatpickr'
@@ -106,6 +108,7 @@ const UtilizationList = () => {
   // ** Store vars
   const dispatch = useDispatch()
   const store = useSelector(state => state.utilization)
+  const { colors } = useContext(ThemeColors)
 
   // ** States
   const [value, setValue] = useState('')
@@ -262,7 +265,7 @@ const UtilizationList = () => {
   {
     when: row => row.utilization.percentage <= 80,
     style: {   
-      color: 'blue',
+      color: colors.warning.main,
       '&:hover': {
         cursor: 'pointer'
       }
@@ -271,7 +274,7 @@ const UtilizationList = () => {
   {
     when: row => row.utilization.totalHours < 40,
     style: {   
-      color: 'red',
+      color: colors.danger.main,
       '&:hover': {
         cursor: 'pointer'
       }

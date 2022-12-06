@@ -27,16 +27,28 @@ const UtilizationStatCards = () => {
     <Row>
         {/* Stats With Icons Horizontal */}
         <Col lg='3' sm='6'>
+          <StatsHorizontal icon={<Percent size={21} />} color='danger' stats={store.statistics.percentage ? `${store.statistics.percentage  }%` : "0"} statTitle='Utilization' />
+        </Col>
+        <Col lg='3' sm='6'>
           <StatsHorizontal icon={<Clock size={21} />} color='primary' stats={store.statistics.totalHours ? store.statistics.totalHours.toString() : "0"} statTitle='Total Hours' />
         </Col>
         <Col lg='3' sm='6'>
           <StatsHorizontal icon={<ThumbsUp size={21} />} color='success' stats={store.statistics.billableHours ? store.statistics.billableHours.toString() : "0"} statTitle='Billable Hours' />
         </Col>
         <Col lg='3' sm='6'>
-          <StatsHorizontal icon={<Percent size={21} />} color='danger' stats={store.statistics.percentage ? `${store.statistics.percentage  }%` : "0"} statTitle='Utilization' />
+          <StatsHorizontal icon={<DollarSign size={21} />} color='warning' stats={asDollar(store.statistics.revenue ? store.statistics.revenue.toString() : "0")} statTitle='Revenue' />
         </Col>
         <Col lg='3' sm='6'>
-          <StatsHorizontal icon={<DollarSign size={21} />} color='warning' stats={asDollar(store.statistics.revenue ? store.statistics.revenue.toString() : "0")} statTitle='Revenue' />
+          <StatsHorizontal icon={<ThumbsUp size={21} />} color='success' stats={store.statistics.grossMargins ? `${store.statistics.grossMargins  }%` : "0"} statTitle='Margins' />
+        </Col>
+        <Col lg='3' sm='6'>
+          <StatsHorizontal icon={<DollarSign size={21} />} color='warning' stats={asDollar(store.statistics.grossCost ? store.statistics.grossCost.toString() : "0")} statTitle='Cost (Gross)' />
+        </Col>
+        <Col lg='3' sm='6'>
+          <StatsHorizontal icon={<DollarSign size={21} />} color='warning' stats={asDollar(store.statistics.ptoCost ? store.statistics.ptoCost.toString() : "0")} statTitle=' Cost (PTO)' />
+        </Col>
+        <Col lg='3' sm='6'>
+          <StatsHorizontal icon={<DollarSign size={21} />} color='warning' stats={asDollar(store.statistics.benchCost ? store.statistics.benchCost.toString() : "0")} statTitle='Cost (Bench)' />
         </Col>
         {/* Stats With Icons Horizontal */}
       </Row>

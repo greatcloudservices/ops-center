@@ -9,6 +9,10 @@ const data = {
       revenue: 47035.00,
       totalHours: 440,
       billableHours: 392,
+      grossCost: 27000.00,
+      ptoCost: 2000.00,
+      benchCost: 6000.00,
+      grossMargins: 32,
       primaryYear: {
         year: 2022,
         weeks: [
